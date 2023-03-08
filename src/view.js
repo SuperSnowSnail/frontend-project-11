@@ -13,7 +13,7 @@ const handleSendingFormState = (elements) => {
   elements.input.disabled = true;
 };
 
-const handleFinishedFormState = (elements) => {
+const handleFinishedFormState = (elements, i18nT) => {
   elements.btn.disabled = false;
   elements.input.disabled = false;
   elements.input.focus();
@@ -21,21 +21,21 @@ const handleFinishedFormState = (elements) => {
 
   elements.feedback.classList.add('text-success');
   elements.input.classList.remove('is-invalid');
-  elements.feedback.textContent = 'RSS успешно загружен'; // TEMP
+  elements.feedback.textContent = i18nT('success');
 };
 
-const handleFailedFormState = (elements) => {
+const handleFailedFormState = (elements, errorKey, i18nT) => {
   elements.btn.disabled = false;
   elements.input.disabled = false;
   elements.input.focus();
 
   elements.feedback.classList.add('text-danger');
   elements.input.classList.add('is-invalid');
-  elements.feedback.textContent = 'Ссылка должна быть валидным URL'; // TEMP
+  elements.feedback.textContent = i18nT(`errors.${errorKey}`);
 };
 
-const handleFormState = (elements, state) => {
-  switch (state) {
+const handleFormState = (elements, initialState, formState, i18nT) => {
+  switch (formState) {
     case 'filling':
       handleFillingFormState(elements);
       break;
@@ -43,20 +43,20 @@ const handleFormState = (elements, state) => {
       handleSendingFormState(elements);
       break;
     case 'finished':
-      handleFinishedFormState(elements);
+      handleFinishedFormState(elements, i18nT);
       break;
     case 'failed':
-      handleFailedFormState(elements);
+      handleFailedFormState(elements, initialState.form.error, i18nT);
       break;
     default:
       break;
   }
 };
 
-const render = (elements /* , initialState */) => (path, value) => {
+const render = (elements, initialState, i18nT) => (path, value) => {
   switch (path) {
     case 'form.state':
-      handleFormState(elements, value);
+      handleFormState(elements, initialState, value, i18nT);
       break;
 
     default:
