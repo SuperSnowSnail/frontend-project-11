@@ -160,7 +160,9 @@ const render = (elements, initialState, i18nT) => (path, value) => {
     case 'form.state':
       handleFormState(elements, initialState, value, i18nT);
       break;
-
+    case 'content.posts':
+      renderPosts(elements, initialState, i18nT);
+      break;
     default:
       break;
   }
