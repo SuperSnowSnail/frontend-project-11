@@ -81,6 +81,10 @@ const runApp = () => {
           feeds: [],
           posts: [],
         },
+        uiState: {
+          modalId: null,
+          visitedIds: [],
+        },
       };
 
       const elements = {
@@ -91,7 +95,7 @@ const runApp = () => {
         posts: document.querySelector('.posts'),
         feeds: document.querySelector('.feeds'),
         modal: {
-          modalElement: document.querySelector('.modal'),
+          container: document.querySelector('.modal'),
           title: document.querySelector('.modal-title'),
           body: document.querySelector('.modal-body'),
           btn: document.querySelector('.full-article'),
@@ -131,13 +135,28 @@ const runApp = () => {
             watchedState.content.feeds.push({ ...feed, id: uniqueId(), link: url });
             addNewPosts(watchedState, posts);
             watchedState.form.state = 'finished';
-            console.log(initialState.content); // eslint-disable-line
+            console.log(initialState); // eslint-disable-line
           })
           .catch((error) => {
             const errorKey = error.message;
             watchedState.form.error = errorKey;
             watchedState.form.state = 'failed';
           });
+      });
+
+      elements.posts.addEventListener('click', (e) => {
+        const { id } = e.target.dataset;
+        if (id && !initialState.uiState.visitedIds.includes(id)) {
+          watchedState.uiState.visitedIds.push(id);
+        }
+      });
+
+      elements.modal.container.addEventListener('show.bs.modal', (e) => {
+        const { id } = e.relatedTarget.dataset;
+        if (!initialState.uiState.visitedIds.includes(id)) {
+          watchedState.uiState.visitedIds.push(id);
+        }
+        watchedState.uiState.modalId = id;
       });
     });
 };

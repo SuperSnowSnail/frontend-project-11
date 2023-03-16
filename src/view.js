@@ -75,7 +75,8 @@ const renderPosts = (elements, state, i18nT) => {
 
     const listItemLink = document.createElement('a');
     listItemLink.href = post.link;
-    listItemLink.classList.add('fw-bold');
+    // prettier-ignore
+    listItemLink.classList.add(state.uiState.visitedIds.includes(post.id) ? ('fw-normal', 'link-secondary') : 'fw-bold');
     listItemLink.setAttribute('data-id', post.id);
     listItemLink.target = '_blank';
     listItemLink.rel = 'noopener noreferrer';
@@ -97,6 +98,14 @@ const renderPosts = (elements, state, i18nT) => {
   card.append(cardBody, cardList);
 
   posts.append(card);
+};
+
+const renderModal = (elements, state, modalId) => {
+  const post = state.content.posts.find(({ id }) => id === modalId);
+  const { title, description, link } = post;
+  elements.modal.title.textContent = title;
+  elements.modal.body.textContent = description;
+  elements.modal.btn.href = link;
 };
 
 const handleFillingFormState = (elements) => {
@@ -161,7 +170,11 @@ const render = (elements, initialState, i18nT) => (path, value) => {
       handleFormState(elements, initialState, value, i18nT);
       break;
     case 'content.posts':
+    case 'uiState.visitedIds':
       renderPosts(elements, initialState, i18nT);
+      break;
+    case 'uiState.modalId':
+      renderModal(elements, initialState, value);
       break;
     default:
       break;
