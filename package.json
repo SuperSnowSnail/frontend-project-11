@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "RSS-Reader",
+  "description": "RSS Reader - Web application for convenient aggregation and reading RSS feeds",
   "type": "module",
   "main": "index.js",
   "scripts": {
