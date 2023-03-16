@@ -40,7 +40,7 @@ const runFeedsRefresher = (state) => {
   const { feeds } = state.content;
   const oldPosts = state.content.posts;
 
-  console.log('checking for new posts'); // eslint-disable-line
+  // console.log('checking for new posts'); // eslint-disable-line
 
   // prettier-ignore
   const promises = feeds.map((feed) => getResponseWithAllOrigins(feed.link)
@@ -126,7 +126,7 @@ const runApp = () => {
         validate(url, links)
           .then((link) => {
             watchedState.form.state = 'sending';
-            console.log('sending test'); // eslint-disable-line
+            // console.log('sending test'); // eslint-disable-line
             return getResponseWithAllOrigins(link);
           })
           .then((response) => {
@@ -135,7 +135,7 @@ const runApp = () => {
             watchedState.content.feeds.push({ ...feed, id: uniqueId(), link: url });
             addNewPosts(watchedState, posts);
             watchedState.form.state = 'finished';
-            console.log(initialState); // eslint-disable-line
+            // console.log(initialState); // eslint-disable-line
           })
           .catch((error) => {
             const errorKey = error.message;
