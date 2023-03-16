@@ -142,7 +142,7 @@ const handleFailedFormState = (elements, errorKey, i18nT) => {
 
   elements.feedback.classList.add('text-danger');
   elements.input.classList.add('is-invalid');
-  elements.feedback.textContent = i18nT(`errors.${errorKey}`);
+  elements.feedback.textContent = i18nT(`errors.${errorKey.replace(' ', '')}`);
 };
 
 const handleFormState = (elements, initialState, formState, i18nT) => {
