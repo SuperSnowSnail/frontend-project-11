@@ -63,7 +63,6 @@ const renderPosts = (elements, state, i18nT) => {
 
   state.content.posts.forEach((post) => {
     const listItem = document.createElement('li');
-    // prettier-ignore
     listItem.classList.add(
       'list-group-item',
       'd-flex',
@@ -75,7 +74,6 @@ const renderPosts = (elements, state, i18nT) => {
 
     const listItemLink = document.createElement('a');
     listItemLink.href = post.link;
-    // prettier-ignore
     listItemLink.classList.add(state.uiState.visitedIds.includes(post.id) ? ('fw-normal', 'link-secondary') : 'fw-bold');
     listItemLink.setAttribute('data-id', post.id);
     listItemLink.target = '_blank';

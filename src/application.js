@@ -13,7 +13,6 @@ import ru from './locales/ru.js';
 
 const refreshInterval = 5000;
 
-// prettier-ignore
 const validate = (url, links) => {
   const schema = yup
     .string()
@@ -24,11 +23,11 @@ const validate = (url, links) => {
   return schema.validate(url);
 };
 
-const getResponseWithAllOrigins = (url) => {
+const getAllOriginsURL = (url) => {
   const allOriginsGetURL = new URL('https://allorigins.hexlet.app/get');
   allOriginsGetURL.searchParams.set('disableCache', 'true');
   allOriginsGetURL.searchParams.set('url', url);
-  return axios.get(allOriginsGetURL);
+  return allOriginsGetURL;
 };
 
 const addNewPosts = (state, posts) => {
@@ -40,11 +39,10 @@ const runFeedsRefresher = (state) => {
   const { feeds } = state.content;
   const oldPosts = state.content.posts;
 
-  // console.log('checking for new posts'); // eslint-disable-line
-
-  // prettier-ignore
-  const promises = feeds.map((feed) => getResponseWithAllOrigins(feed.link)
-    .then((response) => {
+  const promises = feeds.map((feed) => {
+    const { link } = feed;
+    const allOriginsURL = getAllOriginsURL(link);
+    return axios.get(allOriginsURL).then((response) => {
       const rssXML = response.data.contents;
       const { posts } = parse(rssXML);
       const oldLinks = oldPosts.map((post) => post.link);
@@ -52,8 +50,8 @@ const runFeedsRefresher = (state) => {
       if (newPosts.length > 0) {
         addNewPosts(state, newPosts);
       }
-      return Promise.resolve();
-    }));
+    });
+  });
 
   Promise.all(promises).finally(() => {
     setTimeout(() => runFeedsRefresher(state), refreshInterval);
@@ -71,7 +69,6 @@ const runApp = () => {
       },
     })
     .then((i18nT) => {
-      // filling, sending, finished, failed
       const initialState = {
         form: {
           state: 'filling',
@@ -126,8 +123,8 @@ const runApp = () => {
         validate(url, links)
           .then((link) => {
             watchedState.form.state = 'sending';
-            // console.log('sending test'); // eslint-disable-line
-            return getResponseWithAllOrigins(link);
+            const allOriginsURL = getAllOriginsURL(link);
+            return axios.get(allOriginsURL);
           })
           .then((response) => {
             const rssXML = response.data.contents;
@@ -135,7 +132,6 @@ const runApp = () => {
             watchedState.content.feeds.push({ ...feed, id: uniqueId(), link: url });
             addNewPosts(watchedState, posts);
             watchedState.form.state = 'finished';
-            // console.log(initialState); // eslint-disable-line
           })
           .catch((error) => {
             const errorKey = error.message;
